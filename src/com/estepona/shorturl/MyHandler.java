@@ -1,4 +1,4 @@
-package server;
+package com.estepona.shorturl;
 
 import java.io.IOException;
 import java.io.InputStream;
