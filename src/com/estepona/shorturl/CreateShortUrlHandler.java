@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class MyHandler implements HttpHandler {
+public class CreateShortUrlHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange t) throws IOException {
         InputStream is = t.getRequestBody();

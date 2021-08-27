@@ -9,7 +9,7 @@ public class ShortUrlServer {
   public static void main(String[] args) {
     try {
       HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 8000), 0);
-      httpServer.createContext("/myapp", new MyHandler());
+      httpServer.createContext("/create", new CreateShortUrlHandler());
       httpServer.setExecutor(null);
       httpServer.start();
     } catch (IOException e) {
