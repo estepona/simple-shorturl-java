@@ -1,4 +1,4 @@
-package com.estepona.shorturl.handlers;
+package com.estepona.shorturl.handler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

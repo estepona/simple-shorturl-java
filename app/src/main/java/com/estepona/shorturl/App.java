@@ -3,7 +3,7 @@ package com.estepona.shorturl;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import com.estepona.shorturl.handlers.CreateShortUrlHandler;
+import com.estepona.shorturl.handler.CreateShortUrlHandler;
 import com.sun.net.httpserver.HttpServer;
 
 public class App {

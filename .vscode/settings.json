@@ -1,5 +1,8 @@
 {
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "java.project.sourcePaths": [
+    "app/src/main/java"
+  ]
 }
