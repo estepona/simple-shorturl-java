@@ -6,7 +6,7 @@ import java.net.InetSocketAddress;
 import com.estepona.shorturl.handlers.CreateShortUrlHandler;
 import com.sun.net.httpserver.HttpServer;
 
-public class ShortUrlServer {
+public class App {
   public static void main(String[] args) {
     try {
       HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 8000), 0);
