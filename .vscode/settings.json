@@ -4,5 +4,6 @@
   "editor.formatOnSave": true,
   "java.project.sourcePaths": [
     "app/src/main/java"
-  ]
+  ],
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
