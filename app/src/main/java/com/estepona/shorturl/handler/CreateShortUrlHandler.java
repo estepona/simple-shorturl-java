@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.estepona.shorturl.api.CreateShortUrlResponse;
 import com.estepona.shorturl.api.ShortUrlEntity;
+import com.estepona.shorturl.dao.ShortUrlTable;
 import com.estepona.shorturl.service.UrlTransformerService;
 import com.estepona.shorturl.util.QueryParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,5 +42,8 @@ public class CreateShortUrlHandler implements HttpHandler {
     OutputStream os = t.getResponseBody();
     os.write(respSerialized.getBytes());
     os.close();
+
+    ShortUrlTable sut = new ShortUrlTable();
+    sut.run();
   }
 }
