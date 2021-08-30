@@ -23,6 +23,7 @@ dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.2'
 }
 
 application {
