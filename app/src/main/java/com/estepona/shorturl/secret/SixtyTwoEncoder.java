@@ -17,7 +17,7 @@ public class SixtyTwoEncoder {
     }
 
     while (res.length() != 6) {
-      res += "0";
+      res += chars[0];
     }
 
     return new StringBuilder(res).reverse().toString();

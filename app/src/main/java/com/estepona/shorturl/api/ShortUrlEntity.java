@@ -1,10 +1,10 @@
 package com.estepona.shorturl.api;
 
 public final class ShortUrlEntity {
-  Long id;
-  String md5;
-  String url;
-  String code;
+  private Long id;
+  private String md5;
+  private String url;
+  private String code;
 
   public ShortUrlEntity(Long id, String md5, String url, String code) {
     this.id = id;

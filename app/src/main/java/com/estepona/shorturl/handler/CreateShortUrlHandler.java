@@ -6,12 +6,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import com.estepona.shorturl.api.CreateShortUrlResponse;
+import com.estepona.shorturl.api.ShortUrlEntity;
 import com.estepona.shorturl.service.UrlTransformerService;
 import com.estepona.shorturl.util.QueryParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class CreateShortUrlHandler implements HttpHandler {
+    private String domain = "http://localhost:8000/";
+    private ObjectMapper om = new ObjectMapper();
+
     @Override
     public void handle(HttpExchange t) throws IOException {
         Map<String, String> params = QueryParser.parse(t.getRequestURI().getRawQuery());
@@ -27,11 +33,13 @@ public class CreateShortUrlHandler implements HttpHandler {
         requestBodyInputStream.transferTo(requestBodyTargetStream);
         System.out.println("req body: " + requestBodyTargetStream.toString());
 
-        String resp = UrlTransformerService.transform(url) + "\n";
-        t.sendResponseHeaders(200, resp.length());
+        ShortUrlEntity entity = UrlTransformerService.transform(url);
+        CreateShortUrlResponse resp = new CreateShortUrlResponse(domain + entity.getCode());
+        String respSerialized = om.writeValueAsString(resp) + "\n";
 
+        t.sendResponseHeaders(200, respSerialized.length());
         OutputStream os = t.getResponseBody();
-        os.write(resp.getBytes());
+        os.write(respSerialized.getBytes());
         os.close();
     }
 }
