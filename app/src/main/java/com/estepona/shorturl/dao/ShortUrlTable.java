@@ -16,15 +16,17 @@ public final class ShortUrlTable {
       Statement statement = connection.createStatement();
       statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-      statement.executeUpdate("drop table if exists person");
-      statement.executeUpdate("create table person (id integer, name string)");
-      statement.executeUpdate("insert into person values(1, 'leo')");
-      statement.executeUpdate("insert into person values(2, 'yui')");
-      ResultSet rs = statement.executeQuery("select * from person");
+      statement.executeUpdate("drop table if exists short_url");
+      statement.executeUpdate("create table short_url (id integer primary key asc, url string, md5 string, code string)");
+      statement.executeUpdate("insert into short_url values(null, 'https://www.google.com', '123', 'sdfs')");
+      statement.executeUpdate("insert into short_url values(null, 'https://www.amazon.com', '123', 'sdfsd')");
+      ResultSet rs = statement.executeQuery("select * from short_url");
       while (rs.next()) {
         // read the result set
-        System.out.println("name = " + rs.getString("name"));
         System.out.println("id = " + rs.getInt("id"));
+        System.out.println("url = " + rs.getString("url"));
+        System.out.println("md5 = " + rs.getString("md5"));
+        System.out.println("code = " + rs.getString("code"));
       }
     } catch (SQLException e) {
       // if the error message is "out of memory",
