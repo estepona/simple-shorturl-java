@@ -43,7 +43,7 @@ public class CreateShortUrlHandler implements HttpHandler {
     os.write(respSerialized.getBytes());
     os.close();
 
-    ShortUrlTable sut = new ShortUrlTable();
+    var sut = new ShortUrlTable();
     sut.run();
   }
 }

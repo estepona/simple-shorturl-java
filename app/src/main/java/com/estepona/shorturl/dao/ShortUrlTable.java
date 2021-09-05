@@ -6,20 +6,105 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.estepona.shorturl.api.ShortUrlEntity;
+
 public final class ShortUrlTable {
+  public static String name = "short_url";
+  private String path = "short_url.db";
   private Connection connection = null;
 
-  public void run() {
+  public ShortUrlTable() {
     try {
-      // create a database connection
-      connection = DriverManager.getConnection("jdbc:sqlite:short_url.db");
+      connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+    } catch (SQLException e) {
+      // if the error message is "out of memory",
+      // it probably means no database file is found
+      System.err.println(e.getMessage());
+    }
+  }
+
+  public void close() {
+    try {
+      if (connection != null) {
+        connection.close();
+      }
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+    }
+  }
+
+  public void create() {
+    var statementStringBuilder = new StringBuilder(1024);
+    statementStringBuilder
+      .append("CREATE TABLE " + name + "(")
+      .append("id INTEGER PRIMARY KEY ASC,")
+      .append("url STRING,")
+      .append("md5 STRING,")
+      .append("code STRING)");
+    String statementString = statementStringBuilder.toString();
+
+    try {
+      Statement statement = connection.createStatement();
+      statement.setQueryTimeout(30);
+
+      statement.executeUpdate(statementString);
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+    }
+  }
+
+  public void drop() {
+    String statementString = "DROP TABLE IF EXISTS " + name;
+
+    try {
+      Statement statement = connection.createStatement();
+      statement.setQueryTimeout(30);
+
+      statement.executeUpdate(statementString);
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+    }
+  }
+
+  public void insert(ShortUrlEntity entity) {
+    var entityStringBuilder = new StringBuilder(1024);
+    entityStringBuilder
+      .append("null")
+      .append(",")
+      .append("'" + entity.getUrl() + "'")
+      .append(",")
+      .append("'" + entity.getMd5() + "'")
+      .append(",")
+      .append("'" + entity.getCode() + "'");
+    String entityString = entityStringBuilder.toString();
+    
+    var insertStatementStringBuilder = new StringBuilder(1024);
+    insertStatementStringBuilder
+      .append("INSERT INTO " + name + " VALUES")
+      .append("(" + entityString + ")");
+    String insertStatementString = insertStatementStringBuilder.toString();
+
+    try {
+      Statement statement = connection.createStatement();
+      statement.setQueryTimeout(30);
+
+      statement.executeUpdate(insertStatementString);
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+    }
+  }
+
+  public void run() {
+    drop();
+    create();
+
+    insert(new ShortUrlEntity(null, "123", "https://www.google.com", "sfvsafds"));
+    insert(new ShortUrlEntity(null, "234", "https://www.amazon.com", "vwsafsas"));
+
+    try {
       Statement statement = connection.createStatement();
       statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-      statement.executeUpdate("drop table if exists short_url");
-      statement.executeUpdate("create table short_url (id integer primary key asc, url string, md5 string, code string)");
-      statement.executeUpdate("insert into short_url values(null, 'https://www.google.com', '123', 'sdfs')");
-      statement.executeUpdate("insert into short_url values(null, 'https://www.amazon.com', '123', 'sdfsd')");
       ResultSet rs = statement.executeQuery("select * from short_url");
       while (rs.next()) {
         // read the result set
@@ -29,17 +114,7 @@ public final class ShortUrlTable {
         System.out.println("code = " + rs.getString("code"));
       }
     } catch (SQLException e) {
-      // if the error message is "out of memory",
-      // it probably means no database file is found
       System.err.println(e.getMessage());
-    } finally {
-      try {
-        if (connection != null)
-          connection.close();
-      } catch (SQLException e) {
-        // connection close failed.
-        System.err.println(e.getMessage());
-      }
     }
   }
 }
