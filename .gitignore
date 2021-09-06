@@ -32,4 +32,4 @@ build
 *.db
 
 # Intellij
-.idea
+/.idea/
