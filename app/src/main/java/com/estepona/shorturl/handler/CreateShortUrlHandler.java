@@ -16,50 +16,50 @@ import java.io.OutputStream;
 import java.util.Map;
 
 public class CreateShortUrlHandler implements HttpHandler {
-	private String baseUrl;
-	private ShortUrlTable shortUrlTable = new ShortUrlTable();
-	private UrlTransformerService urlTransformerService = new UrlTransformerService();
-	private ObjectMapper om = new ObjectMapper();
+  private String baseUrl;
+  private ShortUrlTable shortUrlTable = new ShortUrlTable();
+  private UrlTransformerService urlTransformerService = new UrlTransformerService();
+  private ObjectMapper om = new ObjectMapper();
 
-	public CreateShortUrlHandler(String baseUrl) {
-		this.baseUrl = baseUrl;
-	}
+  public CreateShortUrlHandler(String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
 
-	@Override
-	public void handle(HttpExchange t) throws IOException {
-		// get query
-		Map<String, String> params = QueryParser.parse(t.getRequestURI().getRawQuery());
-		System.out.println("req query: " + params.toString());
-		String url = params.get("url");
-		if (url == null) {
-			System.out.println("url not found...");
-			return;
-		}
+  @Override
+  public void handle(HttpExchange t) throws IOException {
+    // get query
+    Map<String, String> params = QueryParser.parse(t.getRequestURI().getRawQuery());
+    System.out.println("req query: " + params.toString());
+    String url = params.get("url");
+    if (url == null) {
+      System.out.println("url not found...");
+      return;
+    }
 
-		// get body
-		InputStream requestBodyInputStream = t.getRequestBody();
-		ByteArrayOutputStream requestBodyTargetStream = new ByteArrayOutputStream();
-		requestBodyInputStream.transferTo(requestBodyTargetStream);
-		System.out.println("req body: " + requestBodyTargetStream.toString());
+    // get body
+    InputStream requestBodyInputStream = t.getRequestBody();
+    ByteArrayOutputStream requestBodyTargetStream = new ByteArrayOutputStream();
+    requestBodyInputStream.transferTo(requestBodyTargetStream);
+    System.out.println("req body: " + requestBodyTargetStream.toString());
 
-		String shortUrl;
+    String shortUrl;
 
-		// return code if exists
-		String code = shortUrlTable.getCode(url);
-		if (code != null) {
-			shortUrl = baseUrl + code;
-		} else {
-			// otherwise, insert new row
-			ShortUrlEntity entity = urlTransformerService.transform(url);
-			shortUrl = baseUrl + entity.getCode();
-		}
+    // return code if exists
+    String code = shortUrlTable.getCode(url);
+    if (code != null) {
+      shortUrl = baseUrl + code;
+    } else {
+      // otherwise, insert new row
+      ShortUrlEntity entity = urlTransformerService.transform(url);
+      shortUrl = baseUrl + entity.getCode();
+    }
 
-		CreateShortUrlResponse resp = new CreateShortUrlResponse(shortUrl);
-		String respSerialized = om.writeValueAsString(resp) + "\n";
+    CreateShortUrlResponse resp = new CreateShortUrlResponse(shortUrl);
+    String respSerialized = om.writeValueAsString(resp) + "\n";
 
-		t.sendResponseHeaders(200, respSerialized.length());
-		OutputStream os = t.getResponseBody();
-		os.write(respSerialized.getBytes());
-		os.close();
-	}
+    t.sendResponseHeaders(200, respSerialized.length());
+    OutputStream os = t.getResponseBody();
+    os.write(respSerialized.getBytes());
+    os.close();
+  }
 }
