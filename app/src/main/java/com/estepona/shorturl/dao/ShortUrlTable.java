@@ -98,6 +98,22 @@ public final class ShortUrlTable {
 		return null;
 	}
 
+	public String getUrl(String code) {
+		String query = "SELECT url FROM " + name + " WHERE code = '" + code + "'";
+
+		try {
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30);
+
+			ResultSet rs = statement.executeQuery(query);
+			rs.next();
+			return rs.getString(1);
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		return null;
+	}
+
 	public void insert(ShortUrlEntity entity) {
 		var queryBuilder = new StringBuilder(1024);
 		queryBuilder
