@@ -17,6 +17,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class CreateShortUrlHandler implements HttpHandler {
   private String baseUrl;
+  private ShortUrlTable shortUrlTable = new ShortUrlTable();
   private UrlTransformerService urlTransformerService = new UrlTransformerService();
   private ObjectMapper om = new ObjectMapper();
 
@@ -26,6 +27,7 @@ public class CreateShortUrlHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange t) throws IOException {
+    // get query
     Map<String, String> params = QueryParser.parse(t.getRequestURI().getRawQuery());
     System.out.println("req query: " + params.toString());
     String url = params.get("url");
@@ -34,13 +36,25 @@ public class CreateShortUrlHandler implements HttpHandler {
       return;
     }
 
+    // get body
     InputStream requestBodyInputStream = t.getRequestBody();
     ByteArrayOutputStream requestBodyTargetStream = new ByteArrayOutputStream();
     requestBodyInputStream.transferTo(requestBodyTargetStream);
     System.out.println("req body: " + requestBodyTargetStream.toString());
 
-    ShortUrlEntity entity = urlTransformerService.transform(url);
-    CreateShortUrlResponse resp = new CreateShortUrlResponse(baseUrl + entity.getCode());
+    String shortUrl;
+
+    // return code if exists
+    String code = shortUrlTable.getCode(url);
+    if (code != null) {
+      shortUrl = baseUrl + code;
+    } else {
+      // otherwise insert new row
+      ShortUrlEntity entity = urlTransformerService.transform(url);
+      shortUrl = baseUrl + entity.getCode();
+    }
+
+    CreateShortUrlResponse resp = new CreateShortUrlResponse(shortUrl);
     String respSerialized = om.writeValueAsString(resp) + "\n";
 
     t.sendResponseHeaders(200, respSerialized.length());

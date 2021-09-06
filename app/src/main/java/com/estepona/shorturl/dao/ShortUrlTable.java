@@ -16,6 +16,7 @@ public final class ShortUrlTable {
   public ShortUrlTable() {
     try {
       connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+      create();
     } catch (SQLException e) {
       // if the error message is "out of memory",
       // it probably means no database file is found
@@ -39,11 +40,11 @@ public final class ShortUrlTable {
   public void create() {
     var queryBuilder = new StringBuilder(1024);
     queryBuilder
-      .append("CREATE TABLE " + name + "IF NOT EXISTS (")
+      .append("CREATE TABLE IF NOT EXISTS " + name + " (")
       .append("id INTEGER PRIMARY KEY ASC,")
       .append("url STRING,")
-      .append("md5 STRING,")
-      .append("code STRING)");
+      .append("md5 VARCHAR(32),")
+      .append("code VARCHAR(6))");
     String query = queryBuilder.toString();
 
     try {
@@ -83,6 +84,22 @@ public final class ShortUrlTable {
       System.err.println(e.getMessage());
       return 0;
     }
+  }
+
+  public String getCode(String url) {
+    String query = "SELECT code FROM " + name + " WHERE url = '" + url + "'";
+
+    try {
+      Statement statement = connection.createStatement();
+      statement.setQueryTimeout(30);
+
+      ResultSet rs = statement.executeQuery(query);
+      rs.next();
+      return rs.getString(1);
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+    }
+    return null;
   }
 
   public void insert(ShortUrlEntity entity) {

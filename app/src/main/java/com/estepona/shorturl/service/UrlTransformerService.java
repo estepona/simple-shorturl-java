@@ -9,10 +9,10 @@ public class UrlTransformerService {
   private ShortUrlTable shortUrlTable = new ShortUrlTable();
 
   public ShortUrlEntity transform(String url) {
-    long id = shortUrlTable.getLastId();
+    long id = shortUrlTable.getLastId() + 1;
 
     String md5 = MD5Hashing.hash(url);
-    String code = SixtyTwoEncoder.encode(id + 1);
+    String code = SixtyTwoEncoder.encode(id);
     ShortUrlEntity res = new ShortUrlEntity(null, md5, url, code); // TODO
 
     shortUrlTable.insert(res);
