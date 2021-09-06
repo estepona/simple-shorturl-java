@@ -1,17 +1,21 @@
 package com.estepona.shorturl.service;
 
 import com.estepona.shorturl.api.ShortUrlEntity;
+import com.estepona.shorturl.dao.ShortUrlTable;
 import com.estepona.shorturl.secret.MD5Hashing;
 import com.estepona.shorturl.secret.SixtyTwoEncoder;
 
 public class UrlTransformerService {
-  // TODO: remove after having a database
-  private static Long idCounter = 0L;
+  private ShortUrlTable shortUrlTable = new ShortUrlTable();
 
-  public static ShortUrlEntity transform(String url) {
+  public ShortUrlEntity transform(String url) {
+    long id = shortUrlTable.getLastId();
+
     String md5 = MD5Hashing.hash(url);
-    String code = SixtyTwoEncoder.encode(idCounter);
-    ShortUrlEntity res = new ShortUrlEntity(idCounter++, md5, url, code);
+    String code = SixtyTwoEncoder.encode(id + 1);
+    ShortUrlEntity res = new ShortUrlEntity(null, md5, url, code); // TODO
+
+    shortUrlTable.insert(res);
     
     System.out.println(res.toString());
 

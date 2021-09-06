@@ -33,42 +33,61 @@ public final class ShortUrlTable {
     }
   }
 
+  /**
+   * TODO: add timestamp and expiration
+   */
   public void create() {
-    var statementStringBuilder = new StringBuilder(1024);
-    statementStringBuilder
-      .append("CREATE TABLE " + name + "(")
+    var queryBuilder = new StringBuilder(1024);
+    queryBuilder
+      .append("CREATE TABLE " + name + "IF NOT EXISTS (")
       .append("id INTEGER PRIMARY KEY ASC,")
       .append("url STRING,")
       .append("md5 STRING,")
       .append("code STRING)");
-    String statementString = statementStringBuilder.toString();
+    String query = queryBuilder.toString();
 
     try {
       Statement statement = connection.createStatement();
       statement.setQueryTimeout(30);
 
-      statement.executeUpdate(statementString);
+      statement.executeUpdate(query);
     } catch (SQLException e) {
       System.err.println(e.getMessage());
     }
   }
 
   public void drop() {
-    String statementString = "DROP TABLE IF EXISTS " + name;
+    String query = "DROP TABLE IF EXISTS " + name;
 
     try {
       Statement statement = connection.createStatement();
       statement.setQueryTimeout(30);
 
-      statement.executeUpdate(statementString);
+      statement.executeUpdate(query);
     } catch (SQLException e) {
       System.err.println(e.getMessage());
     }
   }
 
+  public long getLastId() {
+    String query = "SELECT id FROM " + name + " ORDER BY id DESC LIMIT 1";
+
+    try {
+      Statement statement = connection.createStatement();
+      statement.setQueryTimeout(30);
+
+      ResultSet rs = statement.executeQuery(query);
+      rs.next();
+      return rs.getLong(1);
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      return 0;
+    }
+  }
+
   public void insert(ShortUrlEntity entity) {
-    var entityStringBuilder = new StringBuilder(1024);
-    entityStringBuilder
+    var queryBuilder = new StringBuilder(1024);
+    queryBuilder
       .append("null")
       .append(",")
       .append("'" + entity.getUrl() + "'")
@@ -76,12 +95,12 @@ public final class ShortUrlTable {
       .append("'" + entity.getMd5() + "'")
       .append(",")
       .append("'" + entity.getCode() + "'");
-    String entityString = entityStringBuilder.toString();
+    String query = queryBuilder.toString();
     
     var insertStatementStringBuilder = new StringBuilder(1024);
     insertStatementStringBuilder
       .append("INSERT INTO " + name + " VALUES")
-      .append("(" + entityString + ")");
+      .append("(" + query + ")");
     String insertStatementString = insertStatementStringBuilder.toString();
 
     try {

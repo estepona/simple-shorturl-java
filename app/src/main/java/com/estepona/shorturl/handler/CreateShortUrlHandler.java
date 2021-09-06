@@ -17,6 +17,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class CreateShortUrlHandler implements HttpHandler {
   private String baseUrl;
+  private UrlTransformerService urlTransformerService = new UrlTransformerService();
   private ObjectMapper om = new ObjectMapper();
 
   public CreateShortUrlHandler(String baseUrl) {
@@ -38,7 +39,7 @@ public class CreateShortUrlHandler implements HttpHandler {
     requestBodyInputStream.transferTo(requestBodyTargetStream);
     System.out.println("req body: " + requestBodyTargetStream.toString());
 
-    ShortUrlEntity entity = UrlTransformerService.transform(url);
+    ShortUrlEntity entity = urlTransformerService.transform(url);
     CreateShortUrlResponse resp = new CreateShortUrlResponse(baseUrl + entity.getCode());
     String respSerialized = om.writeValueAsString(resp) + "\n";
 
@@ -46,8 +47,5 @@ public class CreateShortUrlHandler implements HttpHandler {
     OutputStream os = t.getResponseBody();
     os.write(respSerialized.getBytes());
     os.close();
-
-    var sut = new ShortUrlTable();
-    sut.run();
   }
 }
