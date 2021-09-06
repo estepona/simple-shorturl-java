@@ -7,12 +7,16 @@ import com.estepona.shorturl.handler.CreateShortUrlHandler;
 import com.sun.net.httpserver.HttpServer;
 
 public class App {
+  public static String protocol = "http";
+  public static String hostname = "localhost";
+  public static int port = 8000;
+
   public static void main(String[] args) {
     try {
-      HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 8000), 0);
+      HttpServer httpServer = HttpServer.create(new InetSocketAddress(hostname, port), 0);
       httpServer.setExecutor(null);
 
-      httpServer.createContext("/create", new CreateShortUrlHandler());
+      httpServer.createContext("/create", new CreateShortUrlHandler(protocol + "://" + hostname + ":" + String.valueOf(port) + "/"));
 
       httpServer.start();
       System.out.println("server started");

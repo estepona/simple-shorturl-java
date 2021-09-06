@@ -16,8 +16,12 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class CreateShortUrlHandler implements HttpHandler {
-  private String domain = "http://localhost:8000/";
+  private String baseUrl;
   private ObjectMapper om = new ObjectMapper();
+
+  public CreateShortUrlHandler(String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
 
   @Override
   public void handle(HttpExchange t) throws IOException {
@@ -35,7 +39,7 @@ public class CreateShortUrlHandler implements HttpHandler {
     System.out.println("req body: " + requestBodyTargetStream.toString());
 
     ShortUrlEntity entity = UrlTransformerService.transform(url);
-    CreateShortUrlResponse resp = new CreateShortUrlResponse(domain + entity.getCode());
+    CreateShortUrlResponse resp = new CreateShortUrlResponse(baseUrl + entity.getCode());
     String respSerialized = om.writeValueAsString(resp) + "\n";
 
     t.sendResponseHeaders(200, respSerialized.length());
