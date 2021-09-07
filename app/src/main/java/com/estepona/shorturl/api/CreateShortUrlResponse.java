@@ -1,7 +1,7 @@
 package com.estepona.shorturl.api;
 
 public class CreateShortUrlResponse {
-  private String shortUrl;
+  private final String shortUrl;
 
   public CreateShortUrlResponse(String shortUrl) {
     this.shortUrl = shortUrl;

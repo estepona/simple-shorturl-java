@@ -1,10 +1,10 @@
 package com.estepona.shorturl.api;
 
 public final class ShortUrlEntity {
-  private Long id;
-  private String md5;
-  private String url;
-  private String code;
+  private final Long id;
+  private final String md5;
+  private final String url;
+  private final String code;
 
   public ShortUrlEntity(Long id, String md5, String url, String code) {
     this.id = id;
@@ -31,6 +31,6 @@ public final class ShortUrlEntity {
 
   @Override
   public String toString() {
-    return "ShortUrlEntity[" + "id=" + id + ",md5=" + md5 + ",url=" + url + ",code=" + code + "]";
+    return "ShortUrlEntity[" + "id=" + id + ", md5=" + md5 + ", url=" + url + ", code=" + code + "]";
   }
 }
