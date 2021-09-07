@@ -1,7 +1,7 @@
 package com.estepona.shorturl;
 
 import com.estepona.shorturl.handler.CreateShortUrlHandler;
-import com.estepona.shorturl.handler.GetShortUrlHandler;
+import com.estepona.shorturl.handler.GetUrlHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class App {
       httpServer.setExecutor(null);
 
       httpServer.createContext("/create", new CreateShortUrlHandler(protocol + "://" + hostname + ":" + port + "/"));
-      httpServer.createContext("/", new GetShortUrlHandler());
+      httpServer.createContext("/", new GetUrlHandler());
 
       httpServer.start();
       System.out.println("server started at " + protocol + "://" + hostname + ":" + port);

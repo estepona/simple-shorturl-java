@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class GetShortUrlHandler implements HttpHandler {
+public class GetUrlHandler implements HttpHandler {
   private final ShortUrlTable shortUrlTable = new ShortUrlTable();
 
   @Override
