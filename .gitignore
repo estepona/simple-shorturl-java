@@ -32,7 +32,6 @@ build
 *.db
 
 # Intellij
-/.idea/
 
 # VSCode
 /.vscode/
