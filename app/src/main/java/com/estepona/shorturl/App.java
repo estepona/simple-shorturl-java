@@ -21,7 +21,7 @@ public class App {
       httpServer.createContext("/", new GetShortUrlHandler());
 
       httpServer.start();
-      System.out.println("server started");
+      System.out.println("server started at " + protocol + "://" + hostname + ":" + port);
     } catch (IOException e) {
       e.printStackTrace(System.out);
     }

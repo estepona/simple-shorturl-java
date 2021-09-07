@@ -16,10 +16,10 @@ import java.io.OutputStream;
 import java.util.Map;
 
 public class CreateShortUrlHandler implements HttpHandler {
-  private String baseUrl;
-  private ShortUrlTable shortUrlTable = new ShortUrlTable();
-  private UrlTransformerService urlTransformerService = new UrlTransformerService();
-  private ObjectMapper om = new ObjectMapper();
+  private final String baseUrl;
+  private final ShortUrlTable shortUrlTable = new ShortUrlTable();
+  private final UrlTransformerService urlTransformerService = new UrlTransformerService();
+  private final ObjectMapper om = new ObjectMapper();
 
   public CreateShortUrlHandler(String baseUrl) {
     this.baseUrl = baseUrl;
@@ -40,7 +40,7 @@ public class CreateShortUrlHandler implements HttpHandler {
     InputStream requestBodyInputStream = t.getRequestBody();
     ByteArrayOutputStream requestBodyTargetStream = new ByteArrayOutputStream();
     requestBodyInputStream.transferTo(requestBodyTargetStream);
-    System.out.println("req body: " + requestBodyTargetStream.toString());
+    System.out.println("req body: " + requestBodyTargetStream);
 
     String shortUrl;
 

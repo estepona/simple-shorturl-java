@@ -13,7 +13,7 @@ public class UrlTransformerService {
     String md5 = MD5Hashing.hash(url);
     byte[] md5Encoded = base62.encode(md5.getBytes());
     String md5EncodedSubstring = new String(md5Encoded).substring(0, 6);
-    ShortUrlEntity res = new ShortUrlEntity(null, md5, url, md5EncodedSubstring); // TODO
+    ShortUrlEntity res = new ShortUrlEntity(url, md5, md5EncodedSubstring);
 
     shortUrlTable.insert(res);
 
